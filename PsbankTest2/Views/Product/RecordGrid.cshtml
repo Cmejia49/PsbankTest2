@@ -1,0 +1,45 @@
+﻿@model PsbankTest2.Models.ProductVM
+
+@if (Model.OrderList != null)
+{
+    <table class="table">
+        <tr>
+            <th>
+                Product Name
+            </th>
+            <th>
+                Cost
+            </th>
+            <th>
+                Qty
+            </th>
+            <th>
+                Amount
+            </th>
+            <th></th>
+        </tr>
+
+        @foreach (var item in Model.OrderList)
+        {
+            <tr>
+                <td>
+                    @item.Product.Name
+                </td>
+                <td>
+                    @item.Product.Cost
+                </td>
+                <td>
+                    @item.TotalQuantity
+                </td>
+                <td>
+                    @(item.Product.Cost * item.TotalQuantity)
+                </td>
+                <td>
+                    <button data-id="@item.Id" id="delete">Delete</button>
+                </td>
+            </tr>
+        }
+        
+
+    </table>
+}

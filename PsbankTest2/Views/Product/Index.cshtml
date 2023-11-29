@@ -1,0 +1,97 @@
+﻿@model PsbankTest2.Models.ProductVM
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section scripts
+{
+    <script>
+        $(function () {
+            $("#searchbtn").on('click', function () {
+                var id = $("input[name='searchId']").val()
+                console.log(id);
+                $.ajax({
+                    type: "GET",
+                    url: '/Product/Search/' + id,
+                    contentType: "application/json; charset=utf-8",
+                }).done(function (data) {
+                    $("#FormContent").html(data);
+                })
+            })
+
+
+            $("#addbtn").on('click', function () {
+
+                console.log("yes")
+                var productId = $("input[name='productId']").val();
+                var qty = $("input[name='quantity']").val();
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json",
+                    url: '/Product/AddOrderList',
+                    data: '{productId:' + productId + ',qty:' + qty + ' }'
+                }).done(function (data) {
+                    $("#RecordGrid").html(data);
+                })
+            })
+
+            $("input[name='cash']").on('change', function () {
+                var change = $("input[name='totalAmount']").val() - $("input[name='cash']").val();
+                $("input[name='change']").val(change);
+            })
+
+            $("#saveTransac").on('click', function () {
+
+                var totalAmount = $("input[name='totalAmount']").val();
+                var cash = $("input[name='cash']").val();
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json",
+                    url: '/Product/Transact',
+                    data: '{totalAmount:' + totalAmount + ',cash:' + cash + ' }'
+                }).done(function (data) {
+                    Console.log("Success");
+                })
+            })
+
+            $("#delete").on('click', function () {
+
+                var id = $(this).attr("data-id")
+                console.log("test");
+                $.ajax({
+                    type: "POST",
+                    contentType: "application/json",
+                    url: '/Product/Delete/'+ id,
+                }).done(function (data) {
+                    Console.log("Success");
+                })
+            })
+        })
+    </script>
+}
+<h2>Index</h2>
+
+<div class="row">
+    <div class="col-xs-6">
+        <label>Search</label>
+        <input type="text" name="searchId" />
+        <button id="searchbtn">Search</button>
+    </div>
+</div>
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<div id="FormContent">
+    @Html.Partial("Form", Model)
+</div>
+
+<div id="RecordGrid">
+    @Html.Partial("RecordGrid", Model)
+</div>
+<button id="addbtn">Add To Order List</button>
+
+<div id="SaveForm">
+    @Html.Partial("SaveForm", Model)
+</div>
+<button id="saveTransac">Add To Order List</button>
